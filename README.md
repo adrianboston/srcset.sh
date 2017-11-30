@@ -1,9 +1,9 @@
 # srcset
-A command line script that generates 8 scaled versions -- *320,480,640,768,960,1024,1280,1440 px wide* matching common Mobile and widescreen desktop/laptop vieports -- of an image using imagemagick's convert utility and outputs that tiresome `<img/>` tag, which is then cut and pasted into the html.
+A command line script that generates 8 scaled versions -- *320,480,640,768,960,1024,1280,1440 px wide* matches common Mobile and widescreen desktop/laptop vieports -- of an image using imagemagick's convert utility and outputs that tiresome `<img/>` tag, which is then placed into the target html.
 
 ## Background
 
-Images are eye-catching but they are often the largest payload of a web site or page. Google suggests that a web page load in under 3 seconds or users will abandon the site. With Mobile the situation is aggravated: the connection is slower and expensive; users are even more likely to not bother waiting. So in comes the new `srcset` field to help. The html `<img/>` tag takes an optional set of images that are essentially scaled versions of the original. The Mobile or Web browser selects an image given its current width and resolution capabilities. 'srcset' recommends images that don't waste expensive Mobile bandwidth yet provide a image suitable for the device's resolution. In desktops the browser will select an image based on the current width of its window. In other words, the `srcset` field permits the use of an image that is not too big yet not too small. The `srcset` field is ignored and `src` is used in legacy browsers.
+Images are eye-catching but they are often the largest payload of a web site or page. Google suggests that a web page load in under 3 seconds or users will abandon the site. With Mobile the situation is aggravated: the connection is slower and expensive; users are even more likely to not bother waiting. So in comes the HTML5 `srcset` attribute to help. The html `<img/>` tag takes an optional set of images that are essentially scaled versions of the original. The Mobile or Web browser selects an image given its current width and resolution capabilities. 'srcset' recommends images that don't waste expensive Mobile bandwidth yet provide a image suitable for the device's resolution. In desktops the browser will select an image based on the current width of its window. In other words, the `srcset` attribute permits the use of an image that is not too big yet not too small. The `srcset` attribute is ignored and `src` is used in legacy browsers.
 
 In order to speed up the web further it is suggested that images are compressed to a particular quality. There is no hard recommendation but we use `80` as our default. During conversion `srcset.sh` will interlace the image versions as suggested by webpagetest.org. Remove it from the script as needed.
 
@@ -24,15 +24,16 @@ In order to speed up the web further it is suggested that images are compressed 
 
 Imagemagick's convert utility. https://www.imagemagick.org/script/convert.php
 
-## Additional Resources
+## Useful Resources
 
-
+srcset and responsive
 - https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images
+- https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img
+- https://css-tricks.com/responsive-images-youre-just-changing-resolutions-use-srcset/
+
+speed
 - https://developers.google.com/speed/
-
-Use the following performance tool for measuring your web page speed:
-
-https://www.webpagetest.org
+- Use the following performance tool for measuring your web page speed https://www.webpagetest.org
 
 ## NOTES
 
