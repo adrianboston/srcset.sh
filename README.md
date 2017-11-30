@@ -1,5 +1,5 @@
 # srcset
-A command line script that generates 8 scaled versions -- *320,480,640,768,960,1024,1280,1440 px wide* matches common Mobile and widescreen desktop/laptop vieports -- of an image using Imagemagick's `convert` utility and outputs that tiresome `<img/>` tag, which is then placed into the target html.
+A command line script that generates 8 scaled versions -- *320,480,640,768,960,1024,1280,1440 pixels wide* -- of an image that match common Mobile and widescreen desktop/laptop viewports using Imagemagick's `convert` utility and outputs the needed `<img/>` tag.
 
 ## Background
 
