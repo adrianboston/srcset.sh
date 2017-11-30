@@ -11,10 +11,16 @@ Note that beginning with the highest resolution image is the best option althoug
 
 ## Usage
 
-`./srset.sh file [quality]`
+Converting a single file:
+ `./srset.sh file [quality] [dest]`
 
 - `file` is necessary 
 - `quality` is optional and defaults to `80`
+- `out` is an optional destination directory for the file. Otherwise the file is saved within the `file` directory
+
+Converting several files of a type in a directory. See Known Issues
+
+`for i in images/*.jpg; do ./srcset.sh "$i" 80 dest_images; done`
 
 ## Example
 
@@ -40,3 +46,7 @@ speed
 ## NOTES
 
 Make sure to `chmod u+x srcset.sh` for executable permissions
+
+## KNOWN ISSUES
+
+Specify the destination directory or you will run a recursive loop with the wildcard(*.jpg)
