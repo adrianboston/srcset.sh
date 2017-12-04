@@ -77,9 +77,9 @@ findfiles() {
 	fi
 
 	if [ $issave = false ] ; then
-		echo find "$dirname" -type f -atime +1s \( -name "$findname" -a ! -name "*-320w*.$type" -a ! -name "*-480w*.$type" -a ! -name "*-640w*.$type" -a ! -name "*-768w*.$type" -a ! -name "*-960w*.$type" -a ! -name "*-1024w*.$type" -a ! -name "*-1280w*.$type" -a ! -name "*-1440w*.$type" \) -exec "$0" -f {} -q "$quality" -t "$desttype" -o "$outdir" -l "$legacysize" \;
+		find "$dirname" -type f -atime +1s \( -name "$findname" -a ! -name "*-320w*.$type" -a ! -name "*-480w*.$type" -a ! -name "*-640w*.$type" -a ! -name "*-768w*.$type" -a ! -name "*-960w*.$type" -a ! -name "*-1024w*.$type" -a ! -name "*-1280w*.$type" -a ! -name "*-1440w*.$type" ! -name "*-srcset.*" \) -exec "$0" -f {} -q "$quality" -t "$desttype" -o "$outdir" -l "$legacysize" \;
 	else
-		echo find "$dirname" -type f -atime +1s \( -name "$findname" -a ! -name "*-320w*.$type" -a ! -name "*-480w*.$type" -a ! -name "*-640w*.$type" -a ! -name "*-768w*.$type" -a ! -name "*-960w*.$type" -a ! -name "*-1024w*.$type" -a ! -name "*-1280w*.$type" -a ! -name "*-1440w*.$type" \) -exec "$0" -f {} -q "$quality" -t "$desttype" -o "$outdir" -l "$legacysize" -s \;
+		find "$dirname" -type f -atime +1s \( -name "$findname" -a ! -name "*-320w*.$type" -a ! -name "*-480w*.$type" -a ! -name "*-640w*.$type" -a ! -name "*-768w*.$type" -a ! -name "*-960w*.$type" -a ! -name "*-1024w*.$type" -a ! -name "*-1280w*.$type" -a ! -name "*-1440w*.$type" ! -name "*-srcset.*" \) -exec "$0" -f {} -q "$quality" -t "$desttype" -o "$outdir" -l "$legacysize" -s \;
 	fi
 }
 
