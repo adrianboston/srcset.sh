@@ -94,7 +94,7 @@ issave=false
 findname="*.jpg"
 desttype=""
 
-while getopts ":h:q:d:n:f:o:l:t:s" option; do
+while getopts ":q:d:n:f:o:l:t:sh" option; do
   case "$option" in
   d)
 	dirname="$OPTARG" 
@@ -132,7 +132,8 @@ while getopts ":h:q:d:n:f:o:l:t:s" option; do
   l)
 	legacysize="$OPTARG"
 	;;
-  h)  # it's always useful to provide some help
+  h)
+     echo "HELP"
      usage
      exit 0
      ;;

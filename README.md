@@ -23,17 +23,17 @@ A filename or directory is needed for basic usage. All other flags are optional.
 
 `./srset.sh [-s] -f filename -q quality —t type -l legacysize -o out directory`
 
-* -f   specify a source file for *srcset.sh* to convert.  
-* -d   specify a directory for *srset.sh* to convert. The directory will be traversed using the unix `find` command.  
-* -n   specify the extension for *srset.sh* to find when converting multiple images; default is `*.jpg`.  
-* -q   specify the quality of compression used by *srset.sh*; otherwise uses `converts` default that is suited to source image. See [`convert's` manual](https://www.imagemagick.org/script/command-line-options.php#quality).  
-* -t   specify the type of image conversion used by *srset.sh*; defaults to the same type as the input based on extension.  
-* -l   specify the pixel size to use within the `src` attribute that is used by legacy browsers not supporting `srcset`.  
-* -o   specify a destination directory for the file or files converted by *srset.sh*. Otherwise the file is saved to the input file directory. The tree hierarchy is reserved.  
-* -s   a flag with no value to specify whether to save the resulting `<img>` tag in a html file; default is to not save and print the tag to console.  
-* -h   display the help.  
+-- f   specify a source file for *srcset.sh* to convert.  
+-- d   specify a directory for *srset.sh* to convert. The directory will be traversed using the unix `find` command.  
+-- n   specify the extension for *srset.sh* to find when converting multiple images; default is `*.jpg`.  
+-- q   specify the quality of compression used by *srset.sh*; otherwise uses `converts` default that is suited to source image. See [`convert's` manual](https://www.imagemagick.org/script/command-line-options.php#quality).  
+-- t   specify the type of image conversion used by *srset.sh*; defaults to the same type as the input based on extension.  
+-- l   specify the pixel size to use within the `src` attribute that is used by legacy browsers not supporting `srcset`.  
+-- o   specify a destination directory for the file or files converted by *srset.sh*. Otherwise the file is saved to the input file directory. The tree hierarchy is reserved.  
+-- s   a flag with no value to specify whether to save the resulting `<img>` tag in a html file; default is to not save and print the tag to console.  
+-- h   display the help.  
 
-Typical usage wjem converting a single file uses the -f flag:  
+Typical usage when converting a single file uses the -f flag:  
 `./srset.sh [-s] -f filename -q quality —t type -l legacysrc -o out directory`
 
 Typical usage when converting several files of a type in a directory. 
