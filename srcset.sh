@@ -102,7 +102,7 @@ while getopts ":q:d:n:f:o:l:t:sh" option; do
     		echo 'Directory is invalid $dirname'
 		exit 1
 	fi
-	# strip any trailing slash from the dir_name value
+	# strip any trailing slash from the filename value
 	dirname="${dirname%/}"
 	;; 
   n)
@@ -150,7 +150,7 @@ while getopts ":q:d:n:f:o:l:t:sh" option; do
   esac
 done
 
-# if filename is not empty
+# if filename is not empty then we convert a single file
 if ! [[ -z "$filename" ]] ; then
 	convert_file
 	exit 1
