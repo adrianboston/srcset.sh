@@ -1,62 +1,59 @@
 # NAME
 
-**srcset.sh** -- generate multiple responsive images for web and mobile
+**srcset.sh** -- generate multiple responsive images for web and mobile.
 
 ## SYNOPSIS
 
-`./srset.sh [-hs] -f filename —t type -q quality -l legacysize -o out directory`   
-`./srset.sh [-hs] -d directory -n name —t type -q quality -l legacysize -o out directory`
+`./srset.sh [-hmz] [-q quality] [—t type] [-l legacysize] [-s sizes] [-o out path] [-f filename] filename`   
+`./srset.sh [-hmz] [—n findname] [-q quality] [—t type] [-l legacysize] [-s sizes] [-o out path] [-f file hierarchy] file hierarchy`
 
 ## DESCRIPTION
 
-The srcset.sh utility generates eight scaled versions -- *320,480,640,768,960,1024,1280,1440 pixels wide* -- of an image that match common Mobile and widescreen desktop/laptop viewports using Imagemagick's `convert` utility and outputs the needed `<img>` tag.
+The srcset.sh utility generates multiple scaled versions of an image at particular breakpoints -- 320,480,640,768,960,1024,1280,1440 pixels wide -- that match common Mobile and widescreen desktop or laptop viewports using Imagemagick's `convert` utility and outputs the needed `<img>` tag.
 
-A filename *or* directory is needed for basic usage. The options are as follows:
+A filepath, whether filename or file hierarcy is needed. The options are as follows:
 
--f   specify a source file for **srcset.sh** to convert.
+-f   specify a file path (single file or file hierarchy) for **srcset.sh** to convert. The file path may also be specified as the operands immediately following all the options. The directory will be traversed using the unix `find` command. The type of file path, whether file or file hierarchy is determined by **srcset.sh**.
 
--d   specify a directory for **srset.sh** to convert. The directory will be traversed using the unix `find` command.  
+-n   specify the pattern for **srset.sh** to find when converting multiple images. The pattern is passed to unix `find` and is equivalent to its `name` primary. The default pattern is `*.jpg`.
 
--n   specify the extension for **srset.sh** to find when converting multiple images; default is `*.jpg`.  
+-t   specify the destination type of image conversion used by **srset.sh**; defaults to the same type as the input based on extension. The pixel width and the suffix `w` is appended to the source filename such that the resulting filename resembles one of `-320w, -480w, -640w, -768w, -960w, -1024w, -1280w, -1440w` followed by the original or specified type extension.
 
--t   specify the destination type of image conversion used by **srset.sh**; defaults to the same type as the input based on extension.  
+-q   specify the quality from 1 (lowest image quality) to 100 (best quality) of compression used by **srset.sh**; otherwise use the `convert` best fit for the source image. See [`convert's` manual](https://www.imagemagick.org/script/command-line-options.php#quality).
 
--q   specify the quality of compression used by **srset.sh**; otherwise uses `converts` default that is suited to source image. See [`convert's` manual](https://www.imagemagick.org/script/command-line-options.php#quality).  
+-l   specify the pixel width size set within the `src` attribute that is utilized by legacy browsers not supporting `srcset`. The resulting attribute resembles the format `src="[filename]-XXXw.jpg"` where XXX is the specified pixel width. The default creates a copy of the original with no resizing, append the suffix `-srcw` such that the attribute resembles `src="[filename]-srcw.jpg"`.
 
--l   specify the pixel size to use within the `src` attribute that is used by legacy browsers not supporting `srcset`.  
+-o   specify a destination directory for the files converted by **srset.sh**. Otherwise the files are saved to the directory of the specified input file path.
 
--o   specify a destination directory for the file or files converted by **srset.sh**. Otherwise the file is saved to the input file directory. The tree hierarchy is reserved.  
+-s   specify the `sizes` attribute found in the `<img>` tag; the default is `(min-width: 768px) 50vw, 100vw`.
 
--s   a flag with no value to specify whether to save the resulting `<img>` tag in a html file; default is to not save and print the tag to console.  
+-m   a flag with no argument directing **srcset.sh** to pipe the resulting `<img>` markup into a file. Without the flag **srcset.sh* will print the `<img>` markup to the console. 
 
--h   display the help.  
+-z   a flag with no argument directing **srcset.sh** to run a test or dry run. Files are found but no images are generated and no output file path is created. The `<img>` markup will be generated to the console, a `-m` directive will be ignored.
 
-Typical usage when converting a single file uses the -f flag:   
-`./srset.sh [-s] -f filename -q quality —t type -l legacysrc -o out directory`
+-h   display the help.
 
-Typical usage when converting several files of a type in a directory:   
-`./srset.sh [-s] -d directory —n find name -q quality —t type -l legacysrc -o out directory`
+## Examples
 
-## Example
+The following examples are shown as given to the shell:
 
-The following converts one file `images/model_wavy_hair.jpg` using the compression quality of 90 and pixel size of 768 for the legacy `src`:
+- `./srcset.sh images/background1.jpg`   
+Generate a set of eight responsive images from one source file `images/background1.jpg` using the compression quality provided by `convert`. The created files are placed alongside the source files within the `images` directory. The resulting `<img>` tag is printed to the console.
 
-`./srset.sh -f /Website/images/model_wavy_hair.jpg -q 90 -l 768`
+- `./srcset.sh -q 90 -l 768 images/background1.jpg`   
+Generate a set of eight responsive images from one source file `images/background1.jpg` using the compression quality of `90` and pixel size of `768` for the legacy `src` attribute. 
 
-The ouput shows the set of images plus the `-768w` suffix in the `src` legacy attribute:
+- `./srcset.sh images`   
+Generate a set of eight responsive images for each of all files matching the default `*.jpg` pattern found in the `images` directory using the default compression provided by `convert`. The created files are placed alongside the source files within the `images` directory. The resulting `<img>` tag is printed to the console.
 
-`<img src="images/model_wavy_hair-768w.jpg" srcset="images/model_wavy_hair-320w.jpg 320w, images/model_wavy_hair-480w.jpg 480w, images/model_wavy_hair-640w.jpg 640w, images/model_wavy_hair-768w.jpg 768w, images/model_wavy_hair-960w.jpg 960w, images/model_wavy_hair-1024w.jpg 1024w, images/model_wavy_hair-1440w.jpg 1440w", sizes="(min-width: 768px) 50vw, 100vw" alt="An image named images/model_wavy_hair.jpg"/>`
-
-The following converts all the images ending in .jpg found in the `Website/images` folder using the compression quality of 75; the created files are placed into the `/var/htdocs/my-site` directory and each `<img>` tag is saved into a  html file within the output directory:  
-
-`./srset.sh -d Website/images -n "*.jpg" -q 75 -o /var/htdocs/my-site -s`
+- `./srcset.sh -n "*.psd" -q 75 -m -o /var/htdocs/my-site images`   
+Generate a set of responsive images from Photoshop files (files matching the `*.psd` pattern) found in the `images` directory using the compression quality of `75`. The created files are placed into the `/var/htdocs/my-site` directory and each `<img>` tag is saved into a  html file within the matching `/var/htdocs/my-site` output directory.
 
 ## The problem
 
-Generating multiple responsive images using Photoshop, Lightroom or other GUI application is an irksome and error-prone task. Further, the needed `<img>` tag referencing multiple images in the `srcset` attribute is long and tedious to generate. On the other hand, the sweet script *srcset.sh* can be be easily added into a automated build workflow. And that long `<img>` tag with the full set of `srcset` images is generated which can then be pasted from the console or from the saved file with a few simple flicks of the ol' ctrl-v wrist. 
+Generating multiple responsive images using Photoshop, Lightroom or other GUI application is an irksome and error-prone task. Further, the needed `<img>` tag referencing multiple images in the `srcset` attribute is long and tedious to generate. On the other hand, the sweet script *srcset.sh* is a generator that can be be easily added into a automated build workflow. And that long `<img>` tag with the full set of `srcset` images is the standard output which can then be dropped into the target html file(s). 
 
 In addition and of interest, *srcset.sh* permits the use of an image in its largest and highest resolution format including Photoshop's PSD and TIFF format -- that is often the second step after Nikon, Canon and other 'raw' native formats -- from which `convert` can generate the final HTML-ready images. Or you can stick with the tried JPEG, PNG and GIF. The full list of available formats are found [on Imagemagick's site](http://imagemagick.sourceforge.net/http/www/formats.html)
-
 
 ## Background
 
@@ -64,7 +61,7 @@ Images are eye-catching but usually the largest payload of a web site or page. G
 
 In comes the HTML5 `srcset` attribute to help, whether Mobile or desktop Web. The html `<img>` tag takes an optional set of images that should be scaled versions of the original. The Mobile or Web browser selects an image given its current width and resolution capabilities. 'srcset' recommends images that don't waste expensive Mobile bandwidth yet provide a image suitable for the device's resolution. In desktops the browser will select an image based on its current width (opposed to the device's width). In other words, the `srcset` attribute permits the use of an image that is not too big yet not too small. The `srcset` attribute is ignored and `src` is used in legacy browsers.
 
-In order to speed up the web further it is suggested that images are compressed to a particular quality. There is no hard recommendation; `convert` uses `92` if it cannot determine a best fit. That number runs high on the side of a  image quality and low on overall web page download speed. During conversion *srcset.sh* will interlace the image versions as suggested by webpagetest.org. Remove it from the script as needed.
+In order to speed up the web further it is suggested that images are compressed. There is no hard recommendation; `convert` uses `92` if it cannot determine a best fit. That number runs high on the side of a image quality and low on overall web page download speed;. During conversion *srcset.sh* will interlace the image versions as suggested by webpagetest.org. Remove it from the script as needed.
 
 ### Requirements
 
@@ -72,8 +69,8 @@ Imagemagick's convert utility. https://www.imagemagick.org/script/convert.php
 
 Download here https://www.imagemagick.org/script/download.php
 
-#### Mac OS X Binary Release
-[They] recommend MacPorts which custom builds ImageMagick in your environment (some users prefer Homebrew). Download MacPorts and type:
+##### Mac OS X Binary Release
+[Imagemagick] recommend [MacPorts](https://www.macports.org/) which custom builds ImageMagick in your environment (some users prefer [Homebrew](https://brew.sh/). Download MacPorts and type:
 
 `sudo port install ImageMagick`
 
@@ -83,7 +80,7 @@ Download here https://www.imagemagick.org/script/download.php
 ##### Imagemagick list of formats
 - http://imagemagick.sourceforge.net/http/www/formats.html
 
-The srcset tag and responsive design
+##### The srcset tag and responsive design
 - https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images
 - https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img
 - https://css-tricks.com/responsive-images-youre-just-changing-resolutions-use-srcset/
@@ -103,4 +100,4 @@ The srcset tag and responsive design
 - Make sure to `chmod u+x srcset.sh` for executable permissions
 - Stick with release v0.0.5 if your shell lacks getops and then use the following for processing directories noting the use of `-a -name` to prevent file recursion
 
-`find . -type f -atime +1s \( -name *.jpg -a ! -name "*-320w.*" -a ! -name "*-480w.*" -a ! -name "*-640w.*" -a ! -name "*-768w.*" -a ! -name "*-960w.*" -a ! -name "*-1024w.*" -a ! -name "*-1280w.*" -a ! -name "*-1440w.*" ! -name "*-srcset.*" \) -exec ./srcset.sh {} \;`
+`find . -type f -atime +1s \( -name *.jpg -a ! -name "*-320w.*" -a ! -name "*-480w.*" -a ! -name "*-640w.*" -a ! -name "*-768w.*" -a ! -name "*-960w.*" -a ! -name "*-1024w.*" -a ! -name "*-1280w.*" -a ! -name "*-1440w.*" ! -name "*-srcw.*" \) -exec ./srcset.sh {} \;`
