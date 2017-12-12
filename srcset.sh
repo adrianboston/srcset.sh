@@ -35,7 +35,10 @@ convert_file() {
 
 	# change convert options as needed. recommend that psd files use -flatten
      # uuse convert defalt quality that is the best possible
-     options="-strip -interlace Plane"
+     if ! [ -z "$isinterlace" ] ; then
+          options="-strip -interlace Plane"
+     fi
+
      if ! [ -z "$quality" ] ; then
           options="$options -quality $quality"
      fi
@@ -77,7 +80,7 @@ convert_file() {
 
 
 find_files() {
-     find "$dirname" -type f -atime +1s \( -name "$pattern" -a ! -name "*-320w.*" -a ! -name "*-480w.*" -a ! -name "*-640w.*" -a ! -name "*-768w.*" -a ! -name "*-960w.*" -a ! -name "*-1024w.*" -a ! -name "*-1280w.*" -a ! -name "*-1440w.*" ! -name "*-srcw.*" \) -exec "$0" -q "$quality" -t "$desttype" -o "$outdir" -l "$legacysize" -s "$sizes" $ismarkup $istest {} \;
+     find "$dirname" -type f -atime +1s \( -name "$pattern" -a ! -name "*-320w.*" -a ! -name "*-480w.*" -a ! -name "*-640w.*" -a ! -name "*-768w.*" -a ! -name "*-960w.*" -a ! -name "*-1024w.*" -a ! -name "*-1280w.*" -a ! -name "*-1440w.*" ! -name "*-srcw.*" \) -exec "$0" -q "$quality" -t "$desttype" -o "$outdir" -l "$legacysize" -s "$sizes" $isinterlace $ismarkup $istest {} \;
 
 }
 
@@ -89,12 +92,13 @@ quality=""
 legacysize=""
 ismarkup=""
 istest=""
+isinterlace=""
 pattern="*.jpg"
 desttype=""
 sizes="(min-width: 768px) 50vw, 100vw"
 
 # now get options
-while getopts ":f:n:q:o:s:t:l:hmz" option; do
+while getopts ":f:n:q:o:s:t:l:hmzi" option; do
   case "$option" in
   f)
 	tmp="$OPTARG"
@@ -115,11 +119,13 @@ while getopts ":f:n:q:o:s:t:l:hmz" option; do
      ;;
   m)
      # This trick is used for rercusive shells (see the find arguments)
-     ismarkup="-m"
+     ismarkup="-$option"
 	;;
   z)
-     # This trick is used for rercusive shells (see the find arguments)
-     istest="-z"
+     istest="-$option"
+     ;;
+  i)
+     isinterlace="-$option"
      ;;
   t)
      desttype="$OPTARG"

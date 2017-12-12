@@ -9,19 +9,19 @@
 
 ## DESCRIPTION
 
-The srcset.sh utility generates multiple scaled versions of an image at particular breakpoints -- 320,480,640,768,960,1024,1280,1440 pixels wide -- that match common Mobile and widescreen desktop or laptop viewports using Imagemagick's `convert` utility and outputs the needed `<img>` tag.
+The srcset.sh utility generates multiple (eight) scaled versions of an image at particular breakpoints -- 320,480,640,768,960,1024,1280,1440 pixels wide -- that match common Mobile and widescreen viewports using Imagemagick's `convert` utility and outputs the needed `<img>` tag.
 
-A filepath, whether filename or file hierarcy is needed. The options are as follows:
+A file path, whether filename or file hierarcy is required. The options are as follows:
 
 -f   specify a file path (single file or file hierarchy) for **srcset.sh** to convert. The file path may also be specified as the operands immediately following all the options. The directory will be traversed using the unix `find` command. The type of file path, whether file or file hierarchy is determined by **srcset.sh**.
 
 -n   specify the pattern for **srset.sh** to find when converting multiple images. The pattern is passed to unix `find` and is equivalent to its `name` primary. The default pattern is `*.jpg`.
 
--t   specify the destination type of image conversion used by **srset.sh**; defaults to the same type as the input based on extension. The pixel width and the suffix `w` is appended to the source filename such that the resulting filename resembles one of `-320w, -480w, -640w, -768w, -960w, -1024w, -1280w, -1440w` followed by the original or specified type extension.
+-t   specify the type of image conversion used by **srset.sh**; defaults to the same type as the input based on the file's extension. The pixel width and the suffix `w` is appended to the source filename such that the resulting filenames resembles the format, `src="[filename]-XXXw.[type]"` where `XXX` is the specified pixel width; thus, one of `-320w, -480w, -640w, -768w, -960w, -1024w, -1280w, -1440w`.
 
 -q   specify the quality from 1 (lowest image quality) to 100 (best quality) of compression used by **srset.sh**; otherwise use the `convert` best fit for the source image. See [`convert's` manual](https://www.imagemagick.org/script/command-line-options.php#quality).
 
--l   specify the pixel width size set within the `src` attribute that is utilized by legacy browsers not supporting `srcset`. The resulting attribute resembles the format `src="[filename]-XXXw.jpg"` where XXX is the specified pixel width. The default creates a copy of the original with no resizing, append the suffix `-srcw` such that the attribute resembles `src="[filename]-srcw.jpg"`.
+-l   specify the width in pixels set within the `src` attribute that is utilized by legacy browsers not supporting `srcset`. The resulting attribute references the specified width filename. Without, the default creates a copy of the original image **with no resizing**, appends the suffix `-srcw` such that the attribute resembles `src="[filename]-srcw"` followed by the extension. No `-srcw` file is created if a width is specified.
 
 -o   specify a destination directory for the files converted by **srset.sh**. Otherwise the files are saved to the directory of the specified input file path.
 
@@ -29,7 +29,9 @@ A filepath, whether filename or file hierarcy is needed. The options are as foll
 
 -m   a flag with no argument directing **srcset.sh** to pipe the resulting `<img>` markup into a file. Without the flag **srcset.sh* will print the `<img>` markup to the console. 
 
--z   a flag with no argument directing **srcset.sh** to run a test or dry run. Files are found but no images are generated and no output file path is created. The `<img>` markup will be generated to the console, a `-m` directive will be ignored.
+-z   a flag with no argument directing **srcset.sh** to run a test or dry run. File paths are traversed but no images are generated and no new file path is created. The `<img>` markup will be generated to the console, a `-m` directive will be ignored.
+
+-i   a flag with no argument directing **srcset.sh** to interlace the specified image using `convert`. Interlacing an image helps the user decide more quickly whether to abort a page download; interlacing is recommended by Google and webpagetest.org for speed but is not generally favored for image quality.
 
 -h   display the help.
 
@@ -57,11 +59,11 @@ In addition and of interest, *srcset.sh* permits the use of an image in its larg
 
 ## Background
 
-Images are eye-catching but usually the largest payload of a web site or page. Google suggests that a web page load in under 3 seconds or users will abandon the site. With Mobile the situation is aggravated: the connection is slower and expensive; users are even more likely to not bother waiting.
+Images are eye-catching and  but usually the largest payload of a web site or page. Google suggests that a web page load in under 3 seconds or users will abandon the site. With Mobile the situation is aggravated: the connection is slower and expensive; users are even more likely to not bother waiting.
 
 In comes the HTML5 `srcset` attribute to help, whether Mobile or desktop Web. The html `<img>` tag takes an optional set of images that should be scaled versions of the original. The Mobile or Web browser selects an image given its current width and resolution capabilities. 'srcset' recommends images that don't waste expensive Mobile bandwidth yet provide a image suitable for the device's resolution. In desktops the browser will select an image based on its current width (opposed to the device's width). In other words, the `srcset` attribute permits the use of an image that is not too big yet not too small. The `srcset` attribute is ignored and `src` is used in legacy browsers.
 
-In order to speed up the web further it is suggested that images are compressed. There is no hard recommendation; `convert` uses `92` if it cannot determine a best fit. That number runs high on the side of a image quality and low on overall web page download speed;. During conversion *srcset.sh* will interlace the image versions as suggested by webpagetest.org. Remove it from the script as needed.
+In order to speed up the web further it is suggested that images are compressed. There is no hard recommendation; `convert` uses `92` if it cannot determine a best fit. That runs high on the side of a image quality but low on overall web page download speed; load test a site for a balance between speed and beauty. During conversion *srcset.sh* will interlace the image versions as suggested by webpagetest.org.
 
 ### Requirements
 
@@ -98,6 +100,7 @@ Download here https://www.imagemagick.org/script/download.php
 ### NOTES
 
 - Make sure to `chmod u+x srcset.sh` for executable permissions
+- Move to a known path such as `/usr/local/bin`
 - Stick with release v0.0.5 if your shell lacks getops and then use the following for processing directories noting the use of `-a -name` to prevent file recursion
 
 `find . -type f -atime +1s \( -name *.jpg -a ! -name "*-320w.*" -a ! -name "*-480w.*" -a ! -name "*-640w.*" -a ! -name "*-768w.*" -a ! -name "*-960w.*" -a ! -name "*-1024w.*" -a ! -name "*-1280w.*" -a ! -name "*-1440w.*" ! -name "*-srcw.*" \) -exec ./srcset.sh {} \;`
