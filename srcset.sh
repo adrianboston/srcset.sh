@@ -67,7 +67,9 @@ convert_file() {
 		srcsuffix="-$legacysize"w
 	fi
 
-	str='<img src="'$outprefix$srcsuffix.$type'" srcset="'$outprefix-320w.$type' 320w, '$outprefix-480w.$type' 480w, '$outprefix-640w.$type' 640w, '$outprefix-768w.$type' 768w, '$outprefix-960w.$type' 960w, '$outprefix-1024w.$type' 1024w, '$outprefix-1440w.$type' 1440w", sizes="'$sizes'" alt="An image named '$filename'"/>'
+     outprefix="$prefix$outprefix"
+
+	str='<img src="'$outprefix$srcsuffix.$type'" srcset="'$outprefix-320w.$type' 320w, '$outprefix-480w.$type' 480w, '$outprefix-640w.$type' 640w, '$outprefix-768w.$type' 768w, '$outprefix-960w.$type' 960w, '$outprefix-1024w.$type' 1024w, '$outprefix-1440w.$type' 1440w" sizes="'$sizes'" alt="An image named '$filename'"/>'
 
      # if 'save' argument then save to file
      if [ -z "$ismarkup" ] || ! [ -z "$istest" ] ; then
@@ -80,7 +82,7 @@ convert_file() {
 
 
 find_files() {
-     find "$dirname" -type f -atime +1s \( -name "$pattern" -a ! -name "*-320w.*" -a ! -name "*-480w.*" -a ! -name "*-640w.*" -a ! -name "*-768w.*" -a ! -name "*-960w.*" -a ! -name "*-1024w.*" -a ! -name "*-1280w.*" -a ! -name "*-1440w.*" ! -name "*-srcw.*" \) -exec "$0" -q "$quality" -t "$desttype" -o "$outdir" -l "$legacysize" -s "$sizes" $isinterlace $ismarkup $istest {} \;
+     find "$dirname" -type f -atime +1s \( -name "$pattern" -a ! -name "*-320w.*" -a ! -name "*-480w.*" -a ! -name "*-640w.*" -a ! -name "*-768w.*" -a ! -name "*-960w.*" -a ! -name "*-1024w.*" -a ! -name "*-1280w.*" -a ! -name "*-1440w.*" ! -name "*-srcw.*" \) -exec "$0" -q "$quality" -p "$prefix" -t "$desttype" -o "$outdir" -l "$legacysize" -s "$sizes" $isinterlace $ismarkup $istest {} \;
 
 }
 
@@ -96,9 +98,10 @@ isinterlace=""
 pattern="*.jpg"
 desttype=""
 sizes="(min-width: 768px) 50vw, 100vw"
+prefix=""
 
 # now get options
-while getopts ":f:n:q:o:s:t:l:hmzi" option; do
+while getopts ":f:n:p:q:o:s:t:l:hmzi" option; do
   case "$option" in
   f)
 	tmp="$OPTARG"
@@ -106,6 +109,10 @@ while getopts ":f:n:q:o:s:t:l:hmzi" option; do
   n)
 	pattern="$OPTARG" 
 	;;
+  p)
+	prefix="$OPTARG"
+	;;
+
   q)
 	quality="$OPTARG" 
 	;;

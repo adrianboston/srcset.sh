@@ -17,7 +17,9 @@ A file path, whether filename or file hierarcy is required. The options are as f
 
 -n   specify the pattern for **srset.sh** to find when converting multiple images. The pattern is passed to unix `find` and is equivalent to its `name` primary. The default pattern is `*.jpg`.
 
--t   specify the type of image conversion used by **srset.sh**; defaults to the same type as the input based on the file's extension. The pixel width and the suffix `w` is appended to the source filename such that the resulting filenames resembles the format, `src="[filename]-XXXw.[type]"` where `XXX` is the specified pixel width; thus, one of `-320w, -480w, -640w, -768w, -960w, -1024w, -1280w, -1440w`.
+-t   specify the type of image conversion used by **srset.sh**; defaults to the same type as the input based on the file's extension.
+
+-p   specify the prefix that will appear in front of an image within the `src` and `srcset` attributes. It is useful for specifying the release web root. The prefix, pixel width and the suffix `w` is appended to the source filename such that the resulting filenames resembles the format, `src="[prefix][filename]-XXXw.[type]"` where `XXX` is the specified pixel width; thus, one of `-320w, -480w, -640w, -768w, -960w, -1024w, -1280w, -1440w`. The prefix is not added to the converted files as a path. Default is no or empty prefix. 
 
 -q   specify the quality from 1 (lowest image quality) to 100 (best quality) of compression used by **srset.sh**; otherwise use the `convert` best fit for the source image. See [`convert's` manual](https://www.imagemagick.org/script/command-line-options.php#quality).
 
@@ -32,6 +34,7 @@ A file path, whether filename or file hierarcy is required. The options are as f
 -z   a flag with no argument directing **srcset.sh** to run a test or dry run. File paths are traversed but no images are generated and no new file path is created. The `<img>` markup will be generated to the console, a `-m` directive will be ignored.
 
 -i   a flag with no argument directing **srcset.sh** to interlace the specified image using `convert`. Interlacing an image helps the user decide more quickly whether to abort a page download; interlacing is recommended by Google and webpagetest.org for speed but is not generally favored for image quality.
+
 
 -h   display the help.
 
@@ -59,11 +62,12 @@ In addition and of interest, *srcset.sh* permits the use of an image in its larg
 
 ## Background
 
-Images are eye-catching and  but usually the largest payload of a web site or page. Google suggests that a web page load in under 3 seconds or users will abandon the site. With Mobile the situation is aggravated: the connection is slower and expensive; users are even more likely to not bother waiting.
+Images are important UI/UX aspects bu
+t usually the largest payload of a web site or page. As it turns out, speed is User Experience too. Google suggests that a web page load in under 3 seconds or users will abandon the site. With Mobile the situation is aggravated: the connection is slower and expensive; users are even more likely to not bother waiting.
 
 In comes the HTML5 `srcset` attribute to help, whether Mobile or desktop Web. The html `<img>` tag takes an optional set of images that should be scaled versions of the original. The Mobile or Web browser selects an image given its current width and resolution capabilities. 'srcset' recommends images that don't waste expensive Mobile bandwidth yet provide a image suitable for the device's resolution. In desktops the browser will select an image based on its current width (opposed to the device's width). In other words, the `srcset` attribute permits the use of an image that is not too big yet not too small. The `srcset` attribute is ignored and `src` is used in legacy browsers.
 
-In order to speed up the web further it is suggested that images are compressed. There is no hard recommendation; `convert` uses `92` if it cannot determine a best fit. That runs high on the side of a image quality but low on overall web page download speed; load test a site for a balance between speed and beauty. During conversion *srcset.sh* will interlace the image versions as suggested by webpagetest.org.
+In order to speed up the web further it is suggested that images are compressed. There is no hard recommendation; `convert` uses `92` if it cannot determine a best fit. That runs high on the side of a image quality but low on overall web page download speed; load test a site for a balance between speed and beauty. During conversion *srcset.sh* can interlace the image versions as suggested by webpagetest.org.
 
 ### Requirements
 
@@ -72,7 +76,7 @@ Imagemagick's convert utility. https://www.imagemagick.org/script/convert.php
 Download here https://www.imagemagick.org/script/download.php
 
 ##### Mac OS X Binary Release
-[Imagemagick] recommend [MacPorts](https://www.macports.org/) which custom builds ImageMagick in your environment (some users prefer [Homebrew](https://brew.sh/). Download MacPorts and type:
+ImageMagick recommend [MacPorts](https://www.macports.org/) which custom builds the executable in your environment (some users prefer [Homebrew](https://brew.sh/). Download MacPorts and type:
 
 `sudo port install ImageMagick`
 
