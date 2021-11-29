@@ -1,3 +1,8 @@
+
+* Consider using the [version](https://github.com/adrianboston/srcset/) that is written in Rust and uses parallel tasks for multi-cored cpus
+
+
+
 # NAME
 
 **srcset.sh** -- generate multiple responsive images for web and mobile.
